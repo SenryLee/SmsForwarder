@@ -207,54 +207,24 @@ class App : Application(), CactusCallback, Configuration.Provider by Core {
                 startService(foregroundServiceIntent)
             }
 
-            //启动HttpServer
-            if (HttpServerUtils.enableServerAutorun) {
-                Intent(this, HttpServerService::class.java).also {
-                    startService(it)
-                }
-            }
+            // 法院轻量版：不再启动 HttpServer / Location / Bluetooth / 任务类广播监听
 
-            //启动LocationService
-            if (SettingUtils.enableLocation) {
-                val locationServiceIntent = Intent(this, LocationService::class.java)
-                locationServiceIntent.action = ACTION_START
-                startService(locationServiceIntent)
-            }
-
-            //监听电量&充电状态变化
-            val batteryReceiver = BatteryReceiver()
-            val batteryFilter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
-            registerReceiver(batteryReceiver, batteryFilter)
-
-            //监听蓝牙状态变化
-            val bluetoothReceiver = BluetoothReceiver()
-            val filter = IntentFilter().apply {
-                addAction(BluetoothDevice.ACTION_FOUND)
-                addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)
-                addAction(BluetoothAdapter.ACTION_STATE_CHANGED)
-                addAction(BluetoothAdapter.ACTION_SCAN_MODE_CHANGED)
-                addAction(BluetoothAdapter.ACTION_LOCAL_NAME_CHANGED)
-                addAction(BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED)
-                addAction(BluetoothDevice.ACTION_BOND_STATE_CHANGED)
-                addAction(BluetoothDevice.ACTION_ACL_CONNECTED)
-                addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED)
-            }
-            registerReceiver(bluetoothReceiver, filter)
-            if (SettingUtils.enableBluetooth) {
-                val bluetoothScanServiceIntent = Intent(this, BluetoothScanService::class.java)
-                bluetoothScanServiceIntent.action = ACTION_START
-                startService(bluetoothScanServiceIntent)
-            }
-
-            //监听网络变化
+            //监听网络变化（邮件发送依赖网络状态感知，保留）
             val networkReceiver = NetworkChangeReceiver()
             val networkFilter = IntentFilter().apply {
                 addAction(ConnectivityManager.CONNECTIVITY_ACTION)
                 addAction(WifiManager.WIFI_STATE_CHANGED_ACTION)
                 addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION)
-                //addAction("android.intent.action.DATA_CONNECTION_STATE_CHANGED")
             }
             registerReceiver(networkReceiver, networkFilter)
+
+            /* 以下能力在法院轻量版已下线，保留注释便于对照上游
+            //启动HttpServer
+            //启动LocationService
+            //监听电量&充电状态变化
+            //监听蓝牙状态变化
+            //监听锁屏&解锁
+            */
 
             //监听锁屏&解锁
             val lockScreenReceiver = LockScreenReceiver()

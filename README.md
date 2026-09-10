@@ -1,121 +1,101 @@
-![SmsForwarder](pic/SmsForwarder.png)
+# 送达短信助手（Court SMS Helper）
 
-# SmsForwarder-短信转发器
+> **SenryLee fork** · 基于 [pppscn/SmsForwarder](https://github.com/pppscn/SmsForwarder) 的法院送达专用轻量版  
+> 仓库：https://github.com/SenryLee/SmsForwarder  
+> 应用包名：`cn.senrylee.courtsms`（与上游 SmsForwarder 可并存安装）
 
-[English Version](README_en.md)
+把法院 **12368 / 送达类短信** 精准转发到邮箱，再由 **WorkBuddy** 每天傍晚汇总：下载提醒、日程提醒、固定文件夹落盘。
 
-[![GitHub release](https://img.shields.io/github/release/pppscn/SmsForwarder.svg)](https://github.com/pppscn/SmsForwarder/releases) [![GitHub stars](https://img.shields.io/github/stars/pppscn/SmsForwarder)](https://github.com/pppscn/SmsForwarder/stargazers) [![GitHub forks](https://img.shields.io/github/forks/pppscn/SmsForwarder)](https://github.com/pppscn/SmsForwarder/network/members) [![GitHub issues](https://img.shields.io/github/issues/pppscn/SmsForwarder)](https://github.com/pppscn/SmsForwarder/issues) [![GitHub license](https://img.shields.io/github/license/pppscn/SmsForwarder)](https://github.com/pppscn/SmsForwarder/blob/main/LICENSE)
+---
 
---------
+## 和上游 SmsForwarder 的区别
 
-短信转发器——不仅只转发短信，备用机必备神器！
+| 项目 | 上游 SmsForwarder | 本 fork「送达短信助手」 |
+|---|---|---|
+| 定位 | 通用短信/来电/通知转发 | **仅法院相关短信** |
+| 监听 | 短信 + 来电 + App 通知 | **仅短信** |
+| 发送通道 | 钉钉/企微/飞书/Bark/…十余种 | **邮箱（主）+ Webhook（可选）** |
+| 远程控制 / Frpc / 自动任务 | 有 | **已从入口与 Manifest 下线** |
+| 默认规则 | 需自行配置 | **一键写入 12368 + 关键词/案号规则** |
+| 邮件格式 | 自由模板 | **结构化字段**，方便 WorkBuddy 解析 |
+| APK 文件名 | `SmsF_…` | `CourtSms_…` |
 
-监控Android手机短信、来电、APP通知，并根据指定规则转发到其他手机：钉钉群自定义机器人、钉钉企业内机器人、企业微信群机器人、企业微信应用消息、飞书群机器人、飞书企业应用、邮箱、bark、webhook、Tele****机器人、Server酱、PushPlus、手机短信等。
+---
 
-包括主动控制服务端与客户端，让你轻松远程发短信、查短信、查通话、查话簿、查电量等。（V3.0 新增）
+## 推荐链路
 
-自动任务・快捷指令，轻松自动化，助您事半功倍，更多时间享受亲情陪伴！（v3.3 新增）
+```text
+法院短信 → 送达短信助手(Android) → QQ/Foxmail 邮箱
+                                      ↓
+                         WorkBuddy 每天 18:00 读信
+                                      ↓
+                    汇总清单 + 下载提醒 + 日历/滴答 + 固定文件夹
+```
 
-> 注意：从`2022-06-06`开始，原`Java版`的代码归档到`v2.x`分支，不再更新！
+详细 Skill 与自动化提示词见：[workbuddy-skill/court-sms-digest/](workbuddy-skill/court-sms-digest/)
 
-> `v3.x` 适配 Android 4.4 ~ 13.0
+---
 
-> `加入SmsF预览体验计划`（在线更新每周构建版，率先体验新版&修复BUG）
+## 手机端快速上手
 
-**升级操作提示：**
+1. 安装本 fork 的 APK（Release 或自行 `assembleRelease`）。
+2. **通用设置**：开启「转发短信」，授予短信/通知相关权限，并忽略电池优化。
+3. **发送通道**：添加「邮箱」，推荐 QQ/Foxmail；主题模板会预填  
+   `[法院送达][{{CARD_SLOT}}] {{FROM}} | {{COURT_SUMMARY}}`
+4. **关于页** 点「一键法院规则」（或首次启动引导），写入默认规则。
+5. 用法院测试短信或手动「重试/测试」确认邮箱收到带 `NEED_DOWNLOAD` / `NEED_CALENDAR` 字段的邮件。
 
-- `加入SmsF预览体验计划`后在线更新（`关于软件`页面开启，`v3.3.0_240305+`适用）
-- 手动下载：https://github.com/pppscn/SmsForwarder/actions/workflows/Weekly_Build.yml
+### 默认会匹配什么？
 
---------
+- 号码包含 **12368**
+- 或「人民法院 + 案号」/「电子送达 + 法院」/「开庭 + 传票」等组合（可在规则页微调）
 
-## 特别声明:
+### 邮件正文关键字段（给 WorkBuddy）
 
-* 本仓库发布的`SmsForwarder`项目中涉及的任何代码/APK，仅用于测试和学习研究，禁止用于商业用途，不能保证其合法性，准确性，完整性和有效性，请根据情况自行判断。
+- `案号` / `疑似期限/开庭` / `检测到的链接`
+- `NEED_DOWNLOAD=yes|no`
+- `NEED_CALENDAR=yes|no`
+- 原文全文
 
-* 任何用户直接或间接使用或传播`SmsForwarder`的任何代码或APK，无论该等使用是否符合其所在国家或地区，或该等使用或传播发生的国家或地区的法律，`pppscn`和/或代码仓库的任何其他贡献者均不对该等行为产生的任何后果（包括但不限于隐私泄露）负责。
+---
 
-* 如果任何单位或个人认为该项目的代码/APK可能涉嫌侵犯其权利，则应及时通知并提供身份证明，所有权证明，我们将在收到认证文件后删除相关代码/APK。
+## WorkBuddy 端
 
-* 隐私声明： **SmsForwarder 不会收集任何您的隐私数据！！！** APP启动时发送版本信息发送到友盟统计；手动检查新版本时发送版本号用于检查新版本；除此之外，没有任何数据！！！
+1. 连接 **QQ 邮箱** 连接器（与手机发件/收件邮箱一致或同一收件箱）。
+2. 导入或复制 [workbuddy-skill/court-sms-digest/SKILL.md](workbuddy-skill/court-sms-digest/SKILL.md)。
+3. 用 [automation-prompt.md](workbuddy-skill/court-sms-digest/automation-prompt.md) 创建每天 **18:00** 的自动化。
+4. 指定落盘目录，例如 `~/法院送达/`。
 
-* 防诈提醒： `SmsForwarder`完全免费开源，请您在 [打赏](https://gitee.com/pp/SmsForwarder/wikis/pages?sort_id=4912193&doc_id=1821427) 前务必确认是否出于自愿？本项目不参与任何刷单返利担保！**请您远离刷单返利陷阱，谨防网络诈骗！**
+---
 
---------
+## 下载与构建
 
-## 工作流程：
+### 下载
 
-![工作流程](pic/working_principle.png "working_principle.png")
+- GitHub Releases：https://github.com/SenryLee/SmsForwarder/releases  
+- 识别文件名：`CourtSms_<version>_…apk`  
+- 勿与上游 `SmsF_…` / 官方渠道包混淆。
 
---------
+### 自行编译
 
-## 界面预览：
+```bash
+./gradlew :app:assembleDebug
+# 或
+./gradlew :app:assembleRelease
+```
 
-![界面预览](pic/screenshots.jpg "screenshots.jpg")
+产物在 `app/build/outputs/apk/`，文件名以 `CourtSms_` 开头。
 
-更多截图参见 https://github.com/pppscn/SmsForwarder/wiki
+---
 
---------
+## 声明
 
-## 下载地址
+- 本仓库代码基于开源 SmsForwarder，遵循原项目 LICENSE；改造仅用于个人学习与办案辅助，禁止商业贩卖。
+- 不收集隐私数据；邮件内容仅发往你配置的邮箱。
+- 法院短信、链接、文书下载请遵守当地法院电子送达规定；本工具不代替正式送达确认。
 
-> ⚠ 首发地址：https://github.com/pppscn/SmsForwarder/releases
+---
 
-> ⚠ 国内镜像：https://gitee.com/pp/SmsForwarder/releases
+## 致谢
 
-> ⚠ 网盘下载：https://wws.lanzoui.com/b025yl86h 访问密码：`pppscn`
-
---------
-
-## 使用文档【新用户必看！】
-
-> ⚠ GitHub Wiki：https://github.com/pppscn/SmsForwarder/wiki
-
-> ⚠ Gitee Wiki：https://gitee.com/pp/SmsForwarder/wikis/pages
-
-![使用流程与问题排查流程](pic/Troubleshooting_Process.png "Troubleshooting_Process.png")
-
---------
-
-## 反馈与建议：
-
-+ 提交issues 或 pr
-+ 加入交流群（群内都是机油互帮互助，禁止发任何与SmsForwarder使用无关的内容）
-
-|                      TG Group                       |
-|:---------------------------------------------------:|
-|         ![TG Group](pic/tg.png "TG Group")          |
-| [+QBZgnL_fxYM0NjE9](https://t.me/+QBZgnL_fxYM0NjE9) |
-
-## 感谢
-
-> [感谢所有赞助本项目的热心网友 --> 打赏名单](https://gitee.com/pp/SmsForwarder/wikis/pages?sort_id=4912193&doc_id=1821427)
-
-> 本项目得到以下项目的支持与帮助，在此表示衷心的感谢！
-
-+ https://github.com/xiaoyuanhost/TranspondSms (项目原型)
-+ https://github.com/xuexiangjys/XUI （UI框架）
-+ https://github.com/xuexiangjys/XUpdate （在线升级）
-+ https://github.com/getActivity/XXPermissions (权限请求框架)
-+ https://github.com/mainfunx/frpc_android (内网穿透)
-+ https://github.com/gyf-dev/Cactus (保活措施)
-+ https://github.com/yanzhenjie/AndServer (HttpServer)
-+ https://github.com/jenly1314/Location (Location)
-+ https://gitee.com/xuankaicat/kmnkt (socket通信)
-+ [<img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jetbrains.svg" alt="GitHub license" style="width：159px; height: 32px" width="159" height="32" />](https://jb.gg/OpenSourceSupport)  (License Certificate for JetBrains All Products Pack)
-
---------
-
-## 如果您觉得本工具对您有帮助，不妨在右上角点亮一颗小星星，以示鼓励！
-
-<p align="center">
-  <a href="https://github.com/pppscn/SmsForwarder/tree/star-history">
-    <img alt="Star History Chart" src="https://raw.githubusercontent.com/pppscn/SmsForwarder/refs/heads/star-history/star-history.svg" />
-  </a>
-</p>
-
---------
-
-## LICENSE
-
-BSD
+- 上游项目：[pppscn/SmsForwarder](https://github.com/pppscn/SmsForwarder)

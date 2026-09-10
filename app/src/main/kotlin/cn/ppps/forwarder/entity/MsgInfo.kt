@@ -14,6 +14,7 @@ import cn.ppps.forwarder.utils.SettingUtils
 import cn.ppps.forwarder.utils.SettingUtils.Companion.enableSmsTemplate
 import cn.ppps.forwarder.utils.SettingUtils.Companion.extraDeviceMark
 import cn.ppps.forwarder.utils.SettingUtils.Companion.smsTemplate
+import cn.ppps.forwarder.utils.court.CourtSmsEnricher
 import cn.ppps.forwarder.utils.task.TaskUtils
 import com.google.gson.Gson
 import com.xuexiang.xutil.net.NetworkUtils
@@ -80,11 +81,18 @@ data class MsgInfo(
 
     @SuppressLint("SimpleDateFormat")
     fun replaceTemplate(template: String, regexReplace: String = "", encoderName: String = "", ruleTitle: String = ""): String {
+        val court = if (type == "sms") CourtSmsEnricher.enrich(from, content) else null
         return template.replaceTag(getString(R.string.tag_from), from, encoderName)
             .replaceTag(getString(R.string.tag_package_name), from, encoderName)
             .replaceTag(getString(R.string.tag_sms), content, encoderName)
             .replaceTag(getString(R.string.tag_msg), content, encoderName)
             .replaceTag(getString(R.string.tag_card_slot), simInfo, encoderName)
+            .replaceTag(getString(R.string.tag_court_case_no), court?.caseNo ?: "", encoderName)
+            .replaceTag(getString(R.string.tag_court_links), court?.links ?: "", encoderName)
+            .replaceTag(getString(R.string.tag_court_dates), court?.dates ?: "", encoderName)
+            .replaceTag(getString(R.string.tag_need_download), court?.needDownload ?: "no", encoderName)
+            .replaceTag(getString(R.string.tag_need_calendar), court?.needCalendar ?: "no", encoderName)
+            .replaceTag(getString(R.string.tag_court_summary), court?.summary ?: "", encoderName)
             .replaceTag(getString(R.string.tag_card_subid), subId.toString(), encoderName)
             .replaceTag(getString(R.string.tag_title), simInfo, encoderName)
             .replaceTag(getString(R.string.tag_uid), uid.toString(), encoderName)
