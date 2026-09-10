@@ -199,6 +199,8 @@ class EmailFragment : BaseFragment<FragmentSendersEmailBinding?>(), View.OnClick
         //新增
         if (senderId <= 0) {
             titleBar?.setSubTitle(getString(R.string.add_sender))
+            binding!!.etTitleTemplate.setText(cn.ppps.forwarder.utils.court.CourtSmsEnricher.defaultTitleTemplate())
+            binding!!.etNickname.setText(getString(R.string.app_name))
             binding!!.btnDel.setText(R.string.discard)
             return
         }

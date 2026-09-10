@@ -7,12 +7,6 @@
         <item>@string/menu_senders_step</item>
         <item>@string/menu_settings_step</item>
         <item />
-        <item>@string/menu_tasks</item>
-        <item>@string/menu_server</item>
-        <item>@string/menu_client</item>
-        <item>@string/menu_frpc</item>
-        <item>@string/menu_apps</item>
-        <item />
         <item>@string/menu_help</item>
         <item>@string/menu_about</item>
     </string-array>
@@ -22,12 +16,6 @@
         <item>@drawable/ic_menu_rule</item>
         <item>@drawable/ic_menu_send</item>
         <item>@drawable/ic_menu_settings</item>
-        <item />
-        <item>@drawable/ic_menu_task</item>
-        <item>@drawable/ic_menu_server</item>
-        <item>@drawable/ic_menu_client</item>
-        <item>@drawable/ic_menu_frpc</item>
-        <item>@drawable/ic_menu_app</item>
         <item />
         <item>@drawable/ic_menu_help</item>
         <item>@drawable/ic_menu_about</item>

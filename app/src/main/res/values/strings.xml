@@ -29,6 +29,12 @@
     <string name="tag_contact_name" translatable="false">{{CONTACT_NAME}}</string>
     <string name="tag_phone_area" translatable="false">{{PHONE_AREA}}</string>
     <string name="tag_rule_title" translatable="false">{{RULE_TITLE}}</string>
+    <string name="tag_court_case_no" translatable="false">{{COURT_CASE_NO}}</string>
+    <string name="tag_court_links" translatable="false">{{COURT_LINKS}}</string>
+    <string name="tag_court_dates" translatable="false">{{COURT_DATES}}</string>
+    <string name="tag_need_download" translatable="false">{{NEED_DOWNLOAD}}</string>
+    <string name="tag_need_calendar" translatable="false">{{NEED_CALENDAR}}</string>
+    <string name="tag_court_summary" translatable="false">{{COURT_SUMMARY}}</string>
 
     <string name="insert_tag_from">来源号码</string>
     <string name="insert_tag_sms">短信内容</string>
@@ -109,14 +115,14 @@
     <string name="about_item_wechat_miniprogram" formatted="false">微信小程序</string>
     <string name="about_cache_purged">已清理缓存</string>
     <string name="about_frpc_deleted">已删除动态库，重启APP以便生效！</string>
-    <string name="about_copyright">© %1$s PPPSCN All rights reserved.</string>
+    <string name="about_copyright">© %1$s SenryLee fork · based on PPPSCN/SmsForwarder</string>
     <string name="about_item_open_source">开源仓库</string>
     <string name="about_item_github">GitHub</string>
     <string name="about_item_gitee">Gitee</string>
     <string name="about_item_donation_link">打赏名单</string>
-    <string name="url_project_github">https://github.com/pppscn/SmsForwarder</string>
-    <string name="url_project_gitee">https://gitee.com/pp/SmsForwarder</string>
-    <string name="url_help">https://gitee.com/pp/SmsForwarder/wikis/pages</string>
+    <string name="url_project_github">https://github.com/SenryLee/SmsForwarder</string>
+    <string name="url_project_gitee">https://github.com/SenryLee/SmsForwarder</string>
+    <string name="url_help">https://github.com/SenryLee/SmsForwarder#readme</string>
     <string name="url_donation_link">https://gitee.com/pp/SmsForwarder.wiki/raw/master/%E6%89%93%E8%B5%8F%E5%90%8D%E5%8D%95.md</string>
     <string name="url_wechat_miniprogram">https://gitee.com/pp/SmsForwarder/raw/main/pic/wechat_miniprogram.jpg</string>
     <string name="url_tips">https://gitee.com/pp/SmsForwarder.wiki/raw/master/tips.json</string>
@@ -168,8 +174,18 @@
     <string name="tipServiceRunning">Frpc内网穿透服务运行中</string>
     <string name="tipWaitService">正在启动服务</string>
 
-    <string name="app_name">短信转发器</string>
-    <string name="notification_content">不仅只转发短信，备用机必备神器！\n免费开源，禁止贩卖！</string>
+    <string name="app_name">送达短信助手</string>
+    <string name="notification_content">法院送达短信专用轻量转发 · 对接 WorkBuddy</string>
+    <string name="court_mode_title">法院模式一键配置</string>
+    <string name="court_mode_content">将写入默认法院规则（12368 / 关键词+案号），并启用结构化邮件模板。\n\n请先在「发送通道」添加并启用邮箱（推荐 QQ 邮箱），再点确定。</string>
+    <string name="court_mode_success">已写入 %d 条法院转发规则</string>
+    <string name="court_mode_no_sender">请先添加并启用邮箱或 Webhook 发送通道</string>
+    <string name="court_mode_already">法院规则已存在（可再次强制写入）</string>
+    <string name="court_mode_failed">写入法院规则失败，请重试</string>
+    <string name="court_guide_title">送达短信助手</string>
+    <string name="court_guide_content">本 fork 仅保留短信转发，专为法院 12368/送达短信优化。\n\n推荐步骤：\n1. 通用设置中开启「转发短信」并授予权限\n2. 发送通道添加邮箱（QQ/Foxmail）\n3. 关于页或本提示中「一键法院规则」\n4. 电脑端导入 workbuddy-skill 定时读信\n\n详见仓库 README。</string>
+    <string name="court_guide_apply">一键法院规则</string>
+    <string name="court_guide_later">稍后</string>
     <!--Common-->
     <string name="cancel">取消</string>
     <string name="discard">丢弃</string>
