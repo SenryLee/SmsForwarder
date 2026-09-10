@@ -52,7 +52,6 @@ import com.yarolegovich.slidingrootnav.callback.DragStateListener
 @Suppress("PrivatePropertyName", "unused", "DEPRECATION")
 class MainActivity : BaseActivity<ActivityMainBinding?>(), DrawerAdapter.OnItemSelectedListener {
 
-    private val TAG: String = MainActivity::class.java.simpleName
     private val POS_LOG = 0
     private val POS_RULE = 1
     private val POS_SENDER = 2
