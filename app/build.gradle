@@ -143,11 +143,10 @@ android {
             // 调试模式开关
             debuggable true
             jniDebuggable true
-            // 移除无用的资源
-            shrinkResources true
-            // 代码混淆开关
-            minifyEnabled true
-            // 混淆配置
+            // 法院轻量版：debug 关闭混淆，便于本地快速出包验证
+            shrinkResources false
+            minifyEnabled false
+            // 混淆配置（release 仍启用）
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             if (isNeedPackage.toBoolean()) {
                 signingConfig signingConfigs.release

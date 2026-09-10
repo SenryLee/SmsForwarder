@@ -17,7 +17,7 @@ import cn.ppps.forwarder.utils.SettingUtils
 import cn.ppps.forwarder.utils.TYPE_EMAIL
 import cn.ppps.forwarder.utils.TYPE_WEBHOOK
 import cn.ppps.forwarder.utils.XToastUtils
-import com.xuexiang.xutil.resource.ResUtils.getString
+import com.xuexiang.xutil.resource.ResUtils
 
 /**
  * 法院送达专用版：默认开关、邮件模板、一键写入转发规则。
@@ -63,7 +63,7 @@ object CourtModeBootstrap {
                 when (n) {
                     0 -> XToastUtils.warning(R.string.court_mode_no_sender)
                     -1 -> XToastUtils.error(R.string.court_mode_failed)
-                    else -> XToastUtils.success(getString(R.string.court_mode_success, n))
+                    else -> XToastUtils.success(String.format(ResUtils.getString(R.string.court_mode_success), n))
                 }
             }
         }
