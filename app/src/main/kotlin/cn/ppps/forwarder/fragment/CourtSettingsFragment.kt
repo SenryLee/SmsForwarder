@@ -7,6 +7,7 @@ import cn.ppps.forwarder.R
 import cn.ppps.forwarder.core.BaseFragment
 import cn.ppps.forwarder.database.ext.ioThread
 import cn.ppps.forwarder.databinding.FragmentCourtSettingsBinding
+import cn.ppps.forwarder.utils.Log
 import cn.ppps.forwarder.utils.SettingUtils
 import cn.ppps.forwarder.utils.XToastUtils
 import cn.ppps.forwarder.utils.court.CourtEmailHelper
@@ -26,41 +27,57 @@ class CourtSettingsFragment : BaseFragment<FragmentCourtSettingsBinding?>() {
     }
 
     override fun initTitle(): TitleBar? {
-        return super.initTitle()!!.setImmersive(false).apply {
-            setTitle(R.string.menu_settings)
-            setLeftClickListener { popToBack() }
+        return try {
+            super.initTitle()!!.setImmersive(false).apply {
+                setTitle(R.string.menu_settings)
+                setLeftClickListener { popToBack() }
+            }
+        } catch (e: Exception) {
+            Log.e("CourtSettings", "initTitle: ${e.message}")
+            null
         }
     }
 
     override fun initViews() {
-        binding!!.etEmail.setText(CourtEmailHelper.loadEmail())
-        binding!!.sbEnableSms.isChecked = SettingUtils.enableSms
-        binding!!.tvVersion.text = getString(
-            R.string.court_settings_version,
-            BuildConfig.VERSION_NAME,
-            BuildConfig.VERSION_CODE,
-        )
+        try {
+            binding!!.etEmail.setText(CourtEmailHelper.loadEmail())
+            binding!!.sbEnableSms.isChecked = SettingUtils.enableSms
+            binding!!.tvVersion.text = getString(
+                R.string.court_settings_version,
+                BuildConfig.VERSION_NAME,
+                BuildConfig.VERSION_CODE,
+            )
+        } catch (e: Exception) {
+            Log.e("CourtSettings", "initViews: ${e.message}")
+        }
     }
 
     override fun initListeners() {
-        binding!!.sbEnableSms.setOnCheckedChangeListener { _, checked ->
-            SettingUtils.enableSms = checked
+        try {
+            binding!!.sbEnableSms.setOnCheckedChangeListener { _, checked ->
+                SettingUtils.enableSms = checked
+            }
+            binding!!.btnSaveEmail.setOnClickListener { onSaveEmail() }
+            binding!!.btnApplyRules.setOnClickListener { onApplyRules() }
+        } catch (e: Exception) {
+            Log.e("CourtSettings", "initListeners: ${e.message}")
         }
-        binding!!.btnSaveEmail.setOnClickListener { onSaveEmail() }
-        binding!!.btnApplyRules.setOnClickListener { onApplyRules() }
     }
 
     @SingleClick
     private fun onSaveEmail() {
-        val email = binding!!.etEmail.text.toString().trim()
-        val code = binding!!.etAuthCode.text.toString().trim()
+        val email = binding!!.etEmail.text?.toString()?.trim().orEmpty()
+        val code = binding!!.etAuthCode.text?.toString()?.trim().orEmpty()
         ioThread {
             try {
                 CourtEmailHelper.saveEmail(email, code)
                 SettingUtils.enableSms = true
                 CourtModeBootstrap.seedCourtRulesInternalForSettings(true)
                 requireActivity().runOnUiThread {
-                    binding!!.sbEnableSms.isChecked = true
+                    try {
+                        binding!!.sbEnableSms.isChecked = true
+                    } catch (_: Exception) {
+                    }
                     XToastUtils.success(R.string.court_settings_save_ok)
                 }
             } catch (e: Exception) {
@@ -73,6 +90,10 @@ class CourtSettingsFragment : BaseFragment<FragmentCourtSettingsBinding?>() {
 
     @SingleClick
     private fun onApplyRules() {
-        CourtModeBootstrap.seedCourtRulesAsync(true)
+        try {
+            CourtModeBootstrap.seedCourtRulesAsync(true)
+        } catch (e: Exception) {
+            XToastUtils.error(e.message ?: getString(R.string.court_mode_failed))
+        }
     }
 }

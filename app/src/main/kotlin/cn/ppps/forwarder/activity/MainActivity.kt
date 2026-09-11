@@ -1,28 +1,25 @@
 package cn.ppps.forwarder.activity
 
-import android.app.ActivityManager
-import android.content.Context
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.google.android.material.tabs.TabLayout
-import com.hjq.permissions.OnPermissionCallback
-import com.hjq.permissions.XXPermissions
-import com.hjq.permissions.permission.PermissionLists
-import com.hjq.permissions.permission.base.IPermission
-import cn.ppps.forwarder.App
 import cn.ppps.forwarder.R
 import cn.ppps.forwarder.core.BaseActivity
+import cn.ppps.forwarder.database.ext.ioThread
 import cn.ppps.forwarder.databinding.ActivityMainBinding
 import cn.ppps.forwarder.fragment.CourtSettingsFragment
 import cn.ppps.forwarder.fragment.LogsFragment
 import cn.ppps.forwarder.fragment.RulesFragment
 import cn.ppps.forwarder.service.ForegroundService
 import cn.ppps.forwarder.utils.ACTION_START
-import cn.ppps.forwarder.utils.SettingUtils
+import cn.ppps.forwarder.utils.Log
 import cn.ppps.forwarder.utils.SharedPreference
-import cn.ppps.forwarder.utils.XToastUtils
 import cn.ppps.forwarder.utils.court.CourtEmailHelper
 import cn.ppps.forwarder.utils.court.CourtModeBootstrap
 import com.xuexiang.xui.utils.WidgetUtils
@@ -34,6 +31,7 @@ class MainActivity : BaseActivity<ActivityMainBinding?>() {
 
     private val POS_LOG = 0
     private val POS_RULE = 1
+    private val REQ_RUNTIME = 0xC01
 
     private lateinit var mTabLayout: TabLayout
     private var setupHintShown: Boolean by SharedPreference("court_setup_hint_shown", false)
@@ -44,43 +42,16 @@ class MainActivity : BaseActivity<ActivityMainBinding?>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        CourtModeBootstrap.applyLiteDefaultsIfNeeded()
-        initViews()
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && SettingUtils.enableExcludeFromRecents) {
-            val am = App.context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-            val tasks = am.appTasks
-            if (!tasks.isNullOrEmpty()) {
-                tasks[0].setExcludeFromRecents(true)
-            }
+        try {
+            CourtModeBootstrap.applyLiteDefaultsIfNeeded()
+            initViews()
+            ensureCourtBootstrapAsync()
+            requestRuntimePermissions()
+            maybeShowSetupHint()
+        } catch (e: Exception) {
+            Log.e("MainActivity", "onCreate fatal: ${e.message}")
+            e.printStackTrace()
         }
-
-        XXPermissions.with(this)
-            .permission(PermissionLists.getNotificationServicePermission())
-            .permission(PermissionLists.getPostNotificationsPermission())
-            .request(object : OnPermissionCallback {
-                override fun onResult(
-                    grantedList: MutableList<IPermission>,
-                    deniedList: MutableList<IPermission>,
-                ) {
-                    if (deniedList.isNotEmpty()) {
-                        XToastUtils.error(R.string.tips_notification)
-                        return
-                    }
-                    if (!ForegroundService.isRunning) {
-                        val serviceIntent = Intent(getTopActivity(), ForegroundService::class.java)
-                        serviceIntent.action = ACTION_START
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            startForegroundService(serviceIntent)
-                        } else {
-                            startService(serviceIntent)
-                        }
-                    }
-                }
-            })
-
-        maybeShowSetupHint()
     }
 
     override val isSupportSlideBack: Boolean
@@ -114,6 +85,60 @@ class MainActivity : BaseActivity<ActivityMainBinding?>() {
         })
     }
 
+    private fun ensureCourtBootstrapAsync() {
+        ioThread {
+            try {
+                CourtEmailHelper.ensurePlaceholderSender()
+                CourtModeBootstrap.seedCourtRulesInternalForSettings(false)
+            } catch (e: Exception) {
+                Log.e("MainActivity", "bootstrap: ${e.message}")
+            }
+        }
+    }
+
+    private fun requestRuntimePermissions() {
+        val needed = mutableListOf(
+            Manifest.permission.RECEIVE_SMS,
+            Manifest.permission.READ_SMS,
+            Manifest.permission.READ_PHONE_STATE,
+        )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            needed.add(Manifest.permission.POST_NOTIFICATIONS)
+        }
+        val missing = needed.filter {
+            ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED
+        }
+        if (missing.isEmpty()) {
+            startForwardServiceSafe()
+        } else {
+            ActivityCompat.requestPermissions(this, missing.toTypedArray(), REQ_RUNTIME)
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray,
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        startForwardServiceSafe()
+    }
+
+    private fun startForwardServiceSafe() {
+        try {
+            if (ForegroundService.isRunning) return
+            val serviceIntent = Intent(this, ForegroundService::class.java)
+            serviceIntent.action = ACTION_START
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(serviceIntent)
+            } else {
+                startService(serviceIntent)
+            }
+        } catch (e: Exception) {
+            Log.e("MainActivity", "start service: ${e.message}")
+        }
+    }
+
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         val intent = Intent(Intent.ACTION_MAIN)
@@ -131,28 +156,42 @@ class MainActivity : BaseActivity<ActivityMainBinding?>() {
     fun isMenuOpen(): Boolean = false
 
     fun openSettings() {
-        openNewPage(CourtSettingsFragment::class.java)
+        try {
+            openNewPage(CourtSettingsFragment::class.java)
+        } catch (e: Exception) {
+            Log.e("MainActivity", "openSettings: ${e.message}")
+        }
     }
 
     private fun maybeShowSetupHint() {
         if (setupHintShown) return
-        if (CourtEmailHelper.findBuiltinSender() != null && CourtModeBootstrap.isRulesSeeded()) {
+        val emailConfigured = try {
+            CourtEmailHelper.loadEmail().isNotBlank()
+        } catch (_: Exception) {
+            false
+        }
+        if (emailConfigured && CourtModeBootstrap.isRulesSeeded()) {
             setupHintShown = true
             return
         }
-        MaterialDialog.Builder(this)
-            .title(R.string.court_setup_title)
-            .content(R.string.court_setup_content)
-            .positiveText(R.string.court_setup_go)
-            .negativeText(R.string.court_setup_later)
-            .onPositive { _: MaterialDialog?, _: DialogAction? ->
-                setupHintShown = true
-                openSettings()
-            }
-            .onNegative { _: MaterialDialog?, _: DialogAction? ->
-                setupHintShown = true
-            }
-            .cancelable(false)
-            .show()
+        try {
+            MaterialDialog.Builder(this)
+                .title(R.string.court_setup_title)
+                .content(R.string.court_setup_content)
+                .positiveText(R.string.court_setup_go)
+                .negativeText(R.string.court_setup_later)
+                .onPositive { _: MaterialDialog?, _: DialogAction? ->
+                    setupHintShown = true
+                    openSettings()
+                }
+                .onNegative { _: MaterialDialog?, _: DialogAction? ->
+                    setupHintShown = true
+                }
+                .cancelable(true)
+                .show()
+        } catch (e: Exception) {
+            Log.e("MainActivity", "setup hint: ${e.message}")
+            setupHintShown = true
+        }
     }
 }

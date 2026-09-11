@@ -198,45 +198,41 @@ class App : Application(), CactusCallback, Configuration.Provider by Core {
                 }
             }
 
-            //启动前台服务
-            val foregroundServiceIntent = Intent(this, ForegroundService::class.java)
-            foregroundServiceIntent.action = ACTION_START
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                startForegroundService(foregroundServiceIntent)
-            } else {
-                startService(foregroundServiceIntent)
-            }
-
-            // 法院轻量版：不再启动 HttpServer / Location / Bluetooth / 任务类广播监听
+            // 法院轻量版：前台服务改由 MainActivity 授权后再启动，
+            // 避免在 Application.onCreate 中 startForegroundService 导致 Android 12+ 启动即闪退。
 
             //监听网络变化（邮件发送依赖网络状态感知，保留）
-            val networkReceiver = NetworkChangeReceiver()
-            val networkFilter = IntentFilter().apply {
-                addAction(ConnectivityManager.CONNECTIVITY_ACTION)
-                addAction(WifiManager.WIFI_STATE_CHANGED_ACTION)
-                addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION)
+            try {
+                val networkReceiver = NetworkChangeReceiver()
+                val networkFilter = IntentFilter().apply {
+                    addAction(ConnectivityManager.CONNECTIVITY_ACTION)
+                    addAction(WifiManager.WIFI_STATE_CHANGED_ACTION)
+                    addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION)
+                }
+                registerReceiver(networkReceiver, networkFilter)
+            } catch (e: Exception) {
+                Log.e(TAG, "register network receiver: ${e.message}")
             }
-            registerReceiver(networkReceiver, networkFilter)
 
-            /* 以下能力在法院轻量版已下线，保留注释便于对照上游
-            //启动HttpServer
-            //启动LocationService
-            //监听电量&充电状态变化
-            //监听蓝牙状态变化
-            //监听锁屏&解锁
-            */
-
-            //监听锁屏&解锁
-            val lockScreenReceiver = LockScreenReceiver()
-            val lockScreenFilter = IntentFilter().apply {
-                addAction(Intent.ACTION_SCREEN_OFF)
-                addAction(Intent.ACTION_SCREEN_ON)
-                addAction(Intent.ACTION_USER_PRESENT)
+            //监听锁屏&解锁（保活辅助，失败不阻断启动）
+            try {
+                val lockScreenReceiver = LockScreenReceiver()
+                val lockScreenFilter = IntentFilter().apply {
+                    addAction(Intent.ACTION_SCREEN_OFF)
+                    addAction(Intent.ACTION_SCREEN_ON)
+                    addAction(Intent.ACTION_USER_PRESENT)
+                }
+                registerReceiver(lockScreenReceiver, lockScreenFilter)
+            } catch (e: Exception) {
+                Log.e(TAG, "register lock screen receiver: ${e.message}")
             }
-            registerReceiver(lockScreenReceiver, lockScreenFilter)
             //靠近听筒关屏
-            ProximitySensorScreenHelper.refresh(this)
-            //Cactus 集成双进程前台服务，JobScheduler，onePix(一像素)，WorkManager，无声音乐
+            try {
+                ProximitySensorScreenHelper.refresh(this)
+            } catch (e: Exception) {
+                Log.e(TAG, "proximity helper: ${e.message}")
+            }
+            //Cactus 默认关闭；即便开启也做保护，避免拖垮启动
             if (SettingUtils.enableCactus) {
                 //注册广播监听器
                 registerReceiver(CactusReceiver(), IntentFilter().apply {

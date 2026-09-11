@@ -68,12 +68,22 @@ object CourtModeBootstrap {
         seedCourtRulesInternal(force)
 
     private fun seedCourtRulesInternal(force: Boolean): Int {
-        if (rulesSeeded && !force) return 0
+        if (rulesSeeded && !force) {
+            // 已标记写入过，但仍检查库中是否真有规则（升级/清库后可恢复）
+            try {
+                val existing = Core.rule.getAllNonCache()
+                if (existing.any {
+                        it.title == RULE_TITLE_NUMBER || it.title == RULE_TITLE_KEYWORD
+                    }
+                ) {
+                    return 0
+                }
+            } catch (_: Exception) {
+                return 0
+            }
+        }
         return try {
-            val senders = Core.sender.getAllNonCache()
-                .filter { it.status == 1 && it.type == TYPE_EMAIL }
-            if (senders.isEmpty()) return 0
-            val primary = CourtEmailHelper.findBuiltinSender() ?: senders.first()
+            val primary = CourtEmailHelper.ensurePlaceholderSender()
             val existing = Core.rule.getAllNonCache()
             if (force) {
                 existing.filter {

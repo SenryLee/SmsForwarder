@@ -35,14 +35,48 @@ object CourtEmailHelper {
             "sina.cn" -> SmtpProfile("@sina.cn", "smtp.sina.cn", "465", true, false, true)
             "icloud.com", "me.com" ->
                 SmtpProfile("", "smtp.mail.me.com", "587", false, true, false)
-            else -> SmtpProfile("", "smtp.$domain", "465", true, false, false)
+            else -> SmtpProfile("", if (domain.isBlank()) "smtp.qq.com" else "smtp.$domain", "465", true, false, false)
         }
     }
 
     fun findBuiltinSender(): Sender? {
-        val all = Core.sender.getAllNonCache()
-        return all.firstOrNull { it.type == TYPE_EMAIL && it.name == SENDER_NAME }
-            ?: all.firstOrNull { it.type == TYPE_EMAIL && it.status == 1 }
+        return try {
+            val all = Core.sender.getAllNonCache()
+            all.firstOrNull { it.type == TYPE_EMAIL && it.name == SENDER_NAME }
+                ?: all.firstOrNull { it.type == TYPE_EMAIL && it.status == 1 }
+        } catch (e: Exception) {
+            Log.e(TAG, "findBuiltinSender: ${e.message}")
+            null
+        }
+    }
+
+    /** 首启时写入占位邮箱通道，便于立即预置法院规则。 */
+    fun ensurePlaceholderSender(): Sender {
+        findBuiltinSender()?.let { return it }
+        val setting = EmailSetting(
+            mailType = "@qq.com",
+            fromEmail = "",
+            pwd = "",
+            nickname = "法院短信转发器",
+            host = "smtp.qq.com",
+            port = "465",
+            ssl = true,
+            startTls = false,
+            title = CourtSmsEnricher.defaultTitleTemplate(),
+            recipients = mutableMapOf(),
+            toEmail = "",
+        )
+        val json = Gson().toJson(setting)
+        Core.sender.insert(
+            Sender(
+                id = 0,
+                type = TYPE_EMAIL,
+                name = SENDER_NAME,
+                jsonSetting = json,
+                status = 1,
+            )
+        )
+        return findBuiltinSender() ?: error("创建法院邮箱通道失败")
     }
 
     fun loadEmail(): String {
@@ -51,7 +85,8 @@ object CourtEmailHelper {
             val s = Gson().fromJson(sender.jsonSetting, EmailSetting::class.java) ?: return ""
             when {
                 s.toEmail.isNotBlank() -> s.toEmail
-                s.mailType.isNotBlank() && !s.fromEmail.contains("@") -> s.fromEmail + s.mailType
+                s.mailType.isNotBlank() && s.fromEmail.isNotBlank() && !s.fromEmail.contains("@") ->
+                    s.fromEmail + s.mailType
                 else -> s.fromEmail
             }
         } catch (e: Exception) {

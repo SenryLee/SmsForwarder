@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <color name="colorPrimary">#299EE3</color>
-    <color name="colorPrimaryDark">#299EE3</color>
-    <color name="colorAccent">#299EE3</color>
+    <!-- Logo 红优化：降低饱和、略偏暖褐，避免刺眼大红与默认蓝 -->
+    <color name="colorPrimary">#B85C57</color>
+    <color name="colorPrimaryDark">#8F4541</color>
+    <color name="colorAccent">#C9786F</color>
+    <color name="court_bg">#F7F4F2</color>
+    <color name="court_surface">#FFFCFB</color>
+    <color name="court_text">#3D3332</color>
 
     <color name="config_color_select_bg">#FFF1F1F1</color>
 
