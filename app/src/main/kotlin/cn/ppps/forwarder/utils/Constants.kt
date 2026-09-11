@@ -154,7 +154,7 @@ const val TYPE_SOCKET = 15
 //前台服务
 const val FRONT_NOTIFY_ID = 0x1010
 const val FRONT_CHANNEL_ID = "cn.ppps.forwarder"
-const val FRONT_CHANNEL_NAME = "SmsForwarder Foreground Service"
+const val FRONT_CHANNEL_NAME = "法院短信转发器"
 
 //Frp内网穿透
 const val FRPC_LIB_DOWNLOAD_URL = "https://xupdate.ppps.cn/uploads/%s/%s/libgojni.so"

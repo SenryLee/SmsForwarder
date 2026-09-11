@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.view.KeyEvent
 import cn.ppps.forwarder.R
 import cn.ppps.forwarder.utils.CommonUtils.Companion.showPrivacyDialog
-import cn.ppps.forwarder.utils.SettingUtils
 import cn.ppps.forwarder.utils.SettingUtils.Companion.isAgreePrivacy
 import com.xuexiang.xui.utils.KeyboardUtils
 import com.xuexiang.xui.widget.activity.BaseSplashActivity
@@ -47,13 +46,7 @@ class SplashActivity : BaseSplashActivity(), CancelAdapt {
     }
 
     private fun whereToJump() {
-        if (SettingUtils.enablePureTaskMode) {
-            ActivityUtils.startActivity(TaskActivity::class.java)
-        } else if (SettingUtils.enablePureClientMode) {
-            ActivityUtils.startActivity(ClientActivity::class.java)
-        } else {
-            ActivityUtils.startActivity(MainActivity::class.java)
-        }
+        ActivityUtils.startActivity(MainActivity::class.java)
         finish()
     }
 

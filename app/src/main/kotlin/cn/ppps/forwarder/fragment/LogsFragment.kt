@@ -39,7 +39,6 @@ import com.xuexiang.xui.widget.picker.widget.builder.TimePickerBuilder
 import com.xuexiang.xui.widget.picker.widget.configure.TimePickerType
 import com.xuexiang.xutil.data.DateUtils
 import com.xuexiang.xutil.resource.ResUtils.getColors
-import com.xuexiang.xutil.resource.ResUtils.getStringArray
 import com.xuexiang.xutil.tip.ToastUtils
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -73,9 +72,9 @@ class LogsFragment : BaseFragment<FragmentLogsBinding?>(), MsgPagingAdapter.OnIt
 
     override fun initTitle(): TitleBar? {
         titleBar = super.initTitle()!!.setImmersive(false)
-        titleBar!!.setLeftImageResource(R.drawable.ic_action_menu)
+        titleBar!!.setLeftImageResource(R.drawable.ic_menu_settings)
         titleBar!!.setTitle(R.string.menu_logs)
-        titleBar!!.setLeftClickListener { getContainer()?.openMenu() }
+        titleBar!!.setLeftClickListener { getContainer()?.openSettings() }
         titleBar!!.addAction(object : TitleBar.ImageAction(R.drawable.ic_delete) {
             @SingleClick
             override fun performAction(view: View) {
@@ -121,17 +120,9 @@ class LogsFragment : BaseFragment<FragmentLogsBinding?>(), MsgPagingAdapter.OnIt
         viewPool.setMaxRecycledViews(0, 10)
         binding!!.recyclerView.isFocusableInTouchMode = false
 
-        binding!!.tabBar.setTabTitles(getStringArray(R.array.type_param_option))
-        binding!!.tabBar.setOnTabClickListener { _, position ->
-            //XToastUtils.toast("点击了$title--$position")
-            currentType = when (position) {
-                1 -> "call"
-                2 -> "app"
-                else -> "sms"
-            }
-            initLogsFilterDialog(true)
-            reloadData()
-        }
+        // 仅短信：隐藏来电/应用分类切换
+        binding!!.tabBar.visibility = View.GONE
+        currentType = "sms"
     }
 
     override fun initListeners() {

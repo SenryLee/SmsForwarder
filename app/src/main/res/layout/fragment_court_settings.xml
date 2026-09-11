@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/xui_config_color_background"
+    android:fillViewport="true"
+    android:overScrollMode="never">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/court_settings_email_section"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="@string/court_settings_email_hint"
+            android:textSize="13sp" />
+
+        <com.xuexiang.xui.widget.edittext.materialedittext.MaterialEditText
+            android:id="@+id/et_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="@string/court_settings_email"
+            android:inputType="textEmailAddress"
+            android:singleLine="true"
+            app:met_clearButton="true"
+            app:met_floatingLabel="normal" />
+
+        <com.xuexiang.xui.widget.edittext.materialedittext.MaterialEditText
+            android:id="@+id/et_auth_code"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:hint="@string/court_settings_auth_code"
+            android:inputType="textPassword"
+            android:singleLine="true"
+            app:met_clearButton="true"
+            app:met_floatingLabel="normal"
+            app:met_helperText="@string/court_settings_auth_code_helper" />
+
+        <Button
+            android:id="@+id/btn_save_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/court_settings_save_email" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="16dp"
+            android:background="#1F000000" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/court_settings_basic_section"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            style="@style/BarStyle.Switch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/court_settings_enable_sms" />
+
+            <com.xuexiang.xui.widget.button.switchbutton.SwitchButton
+                android:id="@+id/sb_enable_sms"
+                style="@style/SwitchButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_apply_rules"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/court_settings_apply_rules" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="16dp"
+            android:background="#1F000000" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/court_settings_about_section"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_version"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textSize="13sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="24dp"
+            android:text="@string/court_settings_about_desc"
+            android:textSize="13sp" />
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

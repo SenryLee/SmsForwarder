@@ -63,7 +63,7 @@ class CommonUtils private constructor() {
         /**
          * 这里填写你的应用隐私政策网页地址
          */
-        private const val PRIVACY_URL = "https://gitee.com/pp/SmsForwarder/raw/main/PRIVACY"
+        private const val PRIVACY_URL = "https://github.com/SenryLee/CourtSmsForwarder/blob/main/PRIVACY"
 
         /**
          * 显示隐私政策的提示

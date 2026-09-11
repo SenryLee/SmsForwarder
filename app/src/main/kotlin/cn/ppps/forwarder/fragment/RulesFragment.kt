@@ -26,7 +26,6 @@ import com.xuexiang.xpage.core.PageOption
 import com.xuexiang.xui.widget.actionbar.TitleBar
 import com.xuexiang.xui.widget.dialog.materialdialog.DialogAction
 import com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog
-import com.xuexiang.xutil.resource.ResUtils.getStringArray
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -49,9 +48,9 @@ class RulesFragment : BaseFragment<FragmentRulesBinding?>(), RulePagingAdapter.O
 
     override fun initTitle(): TitleBar? {
         titleBar = super.initTitle()!!.setImmersive(false)
-        titleBar!!.setLeftImageResource(R.drawable.ic_action_menu)
+        titleBar!!.setLeftImageResource(R.drawable.ic_menu_settings)
         titleBar!!.setTitle(R.string.menu_rules)
-        titleBar!!.setLeftClickListener { getContainer()?.openMenu() }
+        titleBar!!.setLeftClickListener { getContainer()?.openSettings() }
         titleBar!!.addAction(object : TitleBar.ImageAction(R.drawable.ic_add) {
             @SingleClick
             override fun performAction(view: View) {
@@ -78,18 +77,10 @@ class RulesFragment : BaseFragment<FragmentRulesBinding?>(), RulePagingAdapter.O
         binding!!.recyclerView.setRecycledViewPool(viewPool)
         viewPool.setMaxRecycledViews(0, 10)
 
-        binding!!.tabBar.setTabTitles(getStringArray(R.array.type_param_option))
-        binding!!.tabBar.setOnTabClickListener { _, position ->
-            //XToastUtils.toast("点击了$title--$position")
-            currentType = when (position) {
-                1 -> "call"
-                2 -> "app"
-                else -> "sms"
-            }
-            viewModel.setType(currentType)
-            adapter.refresh()
-            binding!!.recyclerView.scrollToPosition(0)
-        }
+        // 仅短信：隐藏来电/应用分类切换
+        binding!!.tabBar.visibility = View.GONE
+        currentType = "sms"
+        viewModel.setType(currentType)
     }
 
     override fun initListeners() {

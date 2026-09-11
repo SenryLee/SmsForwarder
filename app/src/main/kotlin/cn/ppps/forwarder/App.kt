@@ -89,7 +89,7 @@ class App : Application(), CactusCallback, Configuration.Provider by Core {
     val taskRepository by lazy { TaskRepository(database.taskDao()) }
 
     companion object {
-        const val TAG: String = "SmsForwarder"
+        const val TAG: String = "CourtSmsForwarder"
 
         @SuppressLint("StaticFieldLeak")
         lateinit var context: Context
@@ -280,7 +280,7 @@ class App : Application(), CactusCallback, Configuration.Provider by Core {
                     }
                     //切后台切换回调
                     addBackgroundCallback {
-                        Log.d(TAG, if (it) "SmsForwarder 切换到后台运行" else "SmsForwarder 切换到前台运行")
+                        Log.d(TAG, if (it) "切换到后台运行" else "切换到前台运行")
                     }
                 }
             }

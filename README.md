@@ -1,101 +1,64 @@
-# 送达短信助手（Court SMS Helper）
+# 法院短信转发器
 
-> **SenryLee fork** · 基于 [pppscn/SmsForwarder](https://github.com/pppscn/SmsForwarder) 的法院送达专用轻量版  
-> 仓库：https://github.com/SenryLee/SmsForwarder  
-> 应用包名：`cn.senrylee.courtsms`（与上游 SmsForwarder 可并存安装）
+自动识别并转发法院相关短信（如 12368 送达）到邮箱的 Android 应用。
 
-把法院 **12368 / 送达类短信** 精准转发到邮箱，再由 **WorkBuddy** 每天傍晚汇总：下载提醒、日程提醒、固定文件夹落盘。
-
----
-
-## 和上游 SmsForwarder 的区别
-
-| 项目 | 上游 SmsForwarder | 本 fork「送达短信助手」 |
-|---|---|---|
-| 定位 | 通用短信/来电/通知转发 | **仅法院相关短信** |
-| 监听 | 短信 + 来电 + App 通知 | **仅短信** |
-| 发送通道 | 钉钉/企微/飞书/Bark/…十余种 | **邮箱（主）+ Webhook（可选）** |
-| 远程控制 / Frpc / 自动任务 | 有 | **已从入口与 Manifest 下线** |
-| 默认规则 | 需自行配置 | **一键写入 12368 + 关键词/案号规则** |
-| 邮件格式 | 自由模板 | **结构化字段**，方便 WorkBuddy 解析 |
-| APK 文件名 | `SmsF_…` | `CourtSms_…` |
+包名：`cn.senrylee.courtsms`  
+仓库：https://github.com/SenryLee/CourtSmsForwarder
 
 ---
 
-## 推荐链路
+## 做什么
 
-```text
-法院短信 → 送达短信助手(Android) → QQ/Foxmail 邮箱
-                                      ↓
-                         WorkBuddy 每天 18:00 读信
-                                      ↓
-                    汇总清单 + 下载提醒 + 日历/滴答 + 固定文件夹
-```
+法院短信 → 本机监听 → 按预置规则匹配 → 发到你的邮箱。
 
-详细 Skill 与自动化提示词见：[workbuddy-skill/court-sms-digest/](workbuddy-skill/court-sms-digest/)
+界面只保留：
 
----
+- **转发日志**：查看转发记录
+- **转发规则**：查看/微调预置规则
+- **设置**（左上角齿轮）：填写邮箱与授权码、开关、关于
 
-## 手机端快速上手
-
-1. 安装本 fork 的 APK（Release 或自行 `assembleRelease`）。
-2. **通用设置**：开启「转发短信」，授予短信/通知相关权限，并忽略电池优化。
-3. **发送通道**：添加「邮箱」，推荐 QQ/Foxmail；主题模板会预填  
-   `[法院送达][{{CARD_SLOT}}] {{FROM}} | {{COURT_SUMMARY}}`
-4. **关于页** 点「一键法院规则」（或首次启动引导），写入默认规则。
-5. 用法院测试短信或手动「重试/测试」确认邮箱收到带 `NEED_DOWNLOAD` / `NEED_CALENDAR` 字段的邮件。
-
-### 默认会匹配什么？
-
-- 号码包含 **12368**
-- 或「人民法院 + 案号」/「电子送达 + 法院」/「开庭 + 传票」等组合（可在规则页微调）
-
-### 邮件正文关键字段（给 WorkBuddy）
-
-- `案号` / `疑似期限/开庭` / `检测到的链接`
-- `NEED_DOWNLOAD=yes|no`
-- `NEED_CALENDAR=yes|no`
-- 原文全文
+不提供多通道、来电转发、应用通知转发等通用能力。
 
 ---
 
-## WorkBuddy 端
+## 快速开始
 
-1. 连接 **QQ 邮箱** 连接器（与手机发件/收件邮箱一致或同一收件箱）。
-2. 导入或复制 [workbuddy-skill/court-sms-digest/SKILL.md](workbuddy-skill/court-sms-digest/SKILL.md)。
-3. 用 [automation-prompt.md](workbuddy-skill/court-sms-digest/automation-prompt.md) 创建每天 **18:00** 的自动化。
-4. 指定落盘目录，例如 `~/法院送达/`。
+1. 安装 APK（见 [Releases](https://github.com/SenryLee/CourtSmsForwarder/releases)）
+2. 授予短信与通知相关权限，并尽量关闭电池优化
+3. 打开设置，填写邮箱与 SMTP 授权码（推荐 QQ / Foxmail）
+4. 保存后会自动写入法院规则：
+   - `法院号码·12368`
+   - `法院关键词·案号送达`
+5. 收到法院短信后，在「转发日志」确认是否成功
+
+授权码不是登录密码：在邮箱网页「设置 → 账户 → POP3/SMTP」中开启并生成。
 
 ---
 
-## 下载与构建
+## 邮件内容
 
-### 下载
+转发邮件带有结构化字段，便于后续脚本或助手解析，例如：
 
-- GitHub Releases：https://github.com/SenryLee/SmsForwarder/releases  
-- 识别文件名：`CourtSms_<version>_…apk`  
-- 勿与上游 `SmsF_…` / 官方渠道包混淆。
+- 案号、链接、日期
+- `NEED_DOWNLOAD` / `NEED_CALENDAR` 标记
+- 原文摘要
 
-### 自行编译
+可选：配合 [workbuddy-skill/court-sms-digest](./workbuddy-skill/court-sms-digest) 做每日汇总（下载提醒、日程、落盘）。
+
+---
+
+## 构建
 
 ```bash
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+export ANDROID_HOME=/opt/android-sdk
 ./gradlew :app:assembleDebug
-# 或
-./gradlew :app:assembleRelease
 ```
 
-产物在 `app/build/outputs/apk/`，文件名以 `CourtSms_` 开头。
+产物文件名形如：`CourtSms_1.0.0.yymmdd_…_debug.apk`
 
 ---
 
-## 声明
+## 说明
 
-- 本仓库代码基于开源 SmsForwarder，遵循原项目 LICENSE；改造仅用于个人学习与办案辅助，禁止商业贩卖。
-- 不收集隐私数据；邮件内容仅发往你配置的邮箱。
-- 法院短信、链接、文书下载请遵守当地法院电子送达规定；本工具不代替正式送达确认。
-
----
-
-## 致谢
-
-- 上游项目：[pppscn/SmsForwarder](https://github.com/pppscn/SmsForwarder)
+本项目是独立产品「法院短信转发器」，界面与能力已按法院短信场景重做。实现上参考过开源短信转发方案的技术路径，但产品定位、交互与默认规则均为本项目自有设计。
