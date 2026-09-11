@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <color name="colorPrimary">#299EE3</color>
-    <color name="colorPrimaryDark">#299EE3</color>
-    <color name="colorAccent">#299EE3</color>
+    <!-- 送达笺：印泥柔红 -->
+    <color name="colorPrimary">#A85A52</color>
+    <color name="colorPrimaryDark">#7E423C</color>
+    <color name="colorAccent">#A85A52</color>
+    <color name="court_bg">#F5F0EB</color>
+    <color name="court_text">#2A2321</color>
 
     <color name="config_color_select_bg">#FFF1F1F1</color>
 

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="court_page_pad">20dp</dimen>
+    <dimen name="court_block_gap">16dp</dimen>
+    <dimen name="court_item_radius">14dp</dimen>
+    <dimen name="court_header_height">64dp</dimen>
+    <dimen name="court_nav_height">60dp</dimen>
+    <dimen name="court_title_size">24sp</dimen>
+    <dimen name="court_subtitle_size">13sp</dimen>
+    <dimen name="court_body_size">15sp</dimen>
+    <dimen name="court_meta_size">12sp</dimen>
+</resources>

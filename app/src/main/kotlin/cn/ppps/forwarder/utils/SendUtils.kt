@@ -11,9 +11,7 @@ import cn.ppps.forwarder.database.entity.Rule
 import cn.ppps.forwarder.entity.MsgInfo
 import cn.ppps.forwarder.entity.result.SendResponse
 import cn.ppps.forwarder.entity.setting.EmailSetting
-import cn.ppps.forwarder.entity.setting.WebhookSetting
 import cn.ppps.forwarder.utils.sender.EmailUtils
-import cn.ppps.forwarder.utils.sender.WebhookUtils
 import cn.ppps.forwarder.workers.SendLogicWorker
 import cn.ppps.forwarder.workers.SendWorker
 import cn.ppps.forwarder.workers.UpdateLogsWorker
@@ -59,7 +57,7 @@ object SendUtils {
         sendMsgSender(msgInfo, rule, senderIndex, logId, item.msg.id)
     }
 
-    //匹配发送通道发送消息（法院轻量版：仅邮箱 / Webhook）
+    //匹配发送通道发送消息（仅邮箱）
     @SuppressLint("SimpleDateFormat")
     fun sendMsgSender(msgInfo: MsgInfo, rule: Rule, senderIndex: Int = 0, logId: Long = 0L, msgId: Long = 0L) {
         try {
@@ -87,21 +85,12 @@ object SendUtils {
                 }
             }
 
-            when (sender.type) {
-                TYPE_EMAIL -> {
-                    val settingVo = Gson().fromJson(sender.jsonSetting, EmailSetting::class.java)
-                    EmailUtils.sendMsg(settingVo, msgInfo, rule, senderIndex, logId, msgId)
-                }
-
-                TYPE_WEBHOOK -> {
-                    val settingVo = Gson().fromJson(sender.jsonSetting, WebhookSetting::class.java)
-                    WebhookUtils.sendMsg(settingVo, msgInfo, rule, senderIndex, logId, msgId)
-                }
-
-                else -> {
-                    updateLogs(logId, 0, getString(R.string.unknown_sender))
-                    senderLogic(0, msgInfo, rule, senderIndex, msgId)
-                }
+            if (sender.type == TYPE_EMAIL) {
+                val settingVo = Gson().fromJson(sender.jsonSetting, EmailSetting::class.java)
+                EmailUtils.sendMsg(settingVo, msgInfo, rule, senderIndex, logId, msgId)
+            } else {
+                updateLogs(logId, 0, getString(R.string.unknown_sender))
+                senderLogic(0, msgInfo, rule, senderIndex, msgId)
             }
         } catch (e: Exception) {
             e.printStackTrace()

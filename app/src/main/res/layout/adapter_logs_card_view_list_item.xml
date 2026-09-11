@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.xuexiang.xui.widget.layout.XUIFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_view"
-    style="@style/XUILayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/config_margin_5dp"
-    android:layout_marginTop="@dimen/config_margin_5dp"
-    android:layout_marginEnd="@dimen/config_margin_5dp"
-    android:paddingStart="@dimen/config_padding_10dp"
-    android:paddingTop="@dimen/config_padding_5dp"
-    android:paddingEnd="@dimen/config_padding_10dp"
-    android:paddingBottom="@dimen/config_padding_5dp">
+    android:layout_marginBottom="10dp"
+    android:background="@drawable/bg_court_card"
+    android:foreground="?attr/selectableItemBackground"
+    android:paddingStart="16dp"
+    android:paddingTop="14dp"
+    android:paddingEnd="16dp"
+    android:paddingBottom="14dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,49 +28,50 @@
                 android:id="@+id/tv_from"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAppearance="@style/CourtText.Body"
+                android:textSize="16sp"
+                tools:text="12368" />
 
             <TextView
                 android:id="@+id/tv_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp" />
+                android:layout_marginStart="8dp"
+                android:textAppearance="@style/CourtText.Meta"
+                tools:text="刚刚" />
 
             <ImageView
                 android:id="@+id/iv_sim_image"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_marginStart="5dp"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_marginStart="8dp"
+                android:alpha="0.72"
                 tools:ignore="ContentDescription" />
-
         </LinearLayout>
 
         <TextView
             android:id="@+id/tv_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_marginTop="3dp"
+            android:layout_marginTop="8dp"
             android:ellipsize="end"
-            android:gravity="start"
-            android:maxEms="8"
+            android:lineSpacingExtra="3dp"
             android:maxLines="3"
-            android:textSize="@dimen/text_size_small" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="3dp"
-            android:layout_marginBottom="3dp"
-            android:background="?attr/xui_config_color_separator_light" />
+            android:textAppearance="@style/CourtText.Body"
+            android:textColor="@color/court_ink_secondary"
+            android:textSize="14sp"
+            tools:text="【人民法院】您有一条送达信息，请查收。" />
 
         <LinearLayout
             android:id="@+id/layout_Logs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:gravity="center_vertical"
             android:orientation="horizontal" />
-
     </LinearLayout>
 
-</com.xuexiang.xui.widget.layout.XUIFrameLayout>
+</FrameLayout>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="court_ink">#2A2321</color>
+    <color name="court_ink_secondary">#6F635E</color>
+    <color name="court_ink_hint">#9A8D87</color>
+    <color name="court_paper">#F5F0EB</color>
+    <color name="court_surface">#FFFBF8</color>
+    <color name="court_line">#E7DDD5</color>
+    <color name="court_seal">#A85A52</color>
+    <color name="court_seal_soft">#F3E4E1</color>
+    <color name="court_ok">#4F6B52</color>
+    <color name="court_ok_soft">#E4EDE5</color>
+    <color name="court_warn">#9A6B2F</color>
+    <color name="court_danger">#A14B45</color>
+</resources>

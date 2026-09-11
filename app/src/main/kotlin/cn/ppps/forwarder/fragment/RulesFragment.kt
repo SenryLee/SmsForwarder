@@ -26,7 +26,6 @@ import com.xuexiang.xpage.core.PageOption
 import com.xuexiang.xui.widget.actionbar.TitleBar
 import com.xuexiang.xui.widget.dialog.materialdialog.DialogAction
 import com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog
-import com.xuexiang.xutil.resource.ResUtils.getStringArray
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -36,7 +35,6 @@ class RulesFragment : BaseFragment<FragmentRulesBinding?>(), RulePagingAdapter.O
     //private val TAG: String = RulesFragment::class.java.simpleName
     private val that = this
     private var adapter = RulePagingAdapter(this)
-    private var titleBar: TitleBar? = null
     private val viewModel by viewModels<RuleViewModel> { BaseViewModelFactory(context) }
     private var currentType: String = "sms"
 
@@ -47,22 +45,7 @@ class RulesFragment : BaseFragment<FragmentRulesBinding?>(), RulePagingAdapter.O
         return FragmentRulesBinding.inflate(inflater, container, false)
     }
 
-    override fun initTitle(): TitleBar? {
-        titleBar = super.initTitle()!!.setImmersive(false)
-        titleBar!!.setLeftImageResource(R.drawable.ic_action_menu)
-        titleBar!!.setTitle(R.string.menu_rules)
-        titleBar!!.setLeftClickListener { getContainer()?.openMenu() }
-        titleBar!!.addAction(object : TitleBar.ImageAction(R.drawable.ic_add) {
-            @SingleClick
-            override fun performAction(view: View) {
-                PageOption.to(RulesEditFragment::class.java)
-                    .putString(KEY_RULE_TYPE, currentType)
-                    .setNewActivity(true)
-                    .open(that)
-            }
-        })
-        return titleBar
-    }
+    override fun initTitle(): TitleBar? = null
 
     private fun getContainer(): MainActivity? {
         return activity as MainActivity?
@@ -77,23 +60,14 @@ class RulesFragment : BaseFragment<FragmentRulesBinding?>(), RulePagingAdapter.O
         val viewPool = RecycledViewPool()
         binding!!.recyclerView.setRecycledViewPool(viewPool)
         viewPool.setMaxRecycledViews(0, 10)
-
-        binding!!.tabBar.setTabTitles(getStringArray(R.array.type_param_option))
-        binding!!.tabBar.setOnTabClickListener { _, position ->
-            //XToastUtils.toast("点击了$title--$position")
-            currentType = when (position) {
-                1 -> "call"
-                2 -> "app"
-                else -> "sms"
-            }
-            viewModel.setType(currentType)
-            adapter.refresh()
-            binding!!.recyclerView.scrollToPosition(0)
-        }
+        currentType = "sms"
+        viewModel.setType(currentType)
     }
 
     override fun initListeners() {
         binding!!.recyclerView.adapter = adapter
+        binding!!.btnSettings.setOnClickListener { getContainer()?.openSettings() }
+        binding!!.btnAdd.setOnClickListener { openAddRule() }
 
         //下拉刷新
         binding!!.refreshLayout.setOnRefreshListener { refreshLayout: RefreshLayout ->
@@ -107,6 +81,14 @@ class RulesFragment : BaseFragment<FragmentRulesBinding?>(), RulePagingAdapter.O
         }
 
         binding!!.refreshLayout.autoRefresh()
+    }
+
+    @SingleClick
+    private fun openAddRule() {
+        PageOption.to(RulesEditFragment::class.java)
+            .putString(KEY_RULE_TYPE, currentType)
+            .setNewActivity(true)
+            .open(that)
     }
 
     override fun onItemClicked(view: View?, item: Rule) {
