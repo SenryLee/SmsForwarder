@@ -53,7 +53,6 @@ import java.util.Locale
 class LogsFragment : BaseFragment<FragmentLogsBinding?>(), MsgPagingAdapter.OnItemClickListener {
 
     private val TAG: String = LogsFragment::class.java.simpleName
-    private var titleBar: TitleBar? = null
     private var adapter = MsgPagingAdapter(this)
     private val viewModel by viewModels<MsgViewModel> { BaseViewModelFactory(context) }
     private var currentType: String = "sms"
@@ -70,40 +69,7 @@ class LogsFragment : BaseFragment<FragmentLogsBinding?>(), MsgPagingAdapter.OnIt
         return FragmentLogsBinding.inflate(inflater, container, false)
     }
 
-    override fun initTitle(): TitleBar? {
-        titleBar = super.initTitle()!!.setImmersive(false)
-        titleBar!!.setLeftImageResource(R.drawable.ic_menu_settings)
-        titleBar!!.setTitle(R.string.menu_logs)
-        titleBar!!.setLeftClickListener { getContainer()?.openSettings() }
-        titleBar!!.addAction(object : TitleBar.ImageAction(R.drawable.ic_delete) {
-            @SingleClick
-            override fun performAction(view: View) {
-                MaterialDialog.Builder(requireContext())
-                    .content(if (currentFilter.isEmpty()) R.string.delete_type_log_tips else R.string.delete_filter_log_tips)
-                    .positiveText(R.string.lab_yes)
-                    .negativeText(R.string.lab_no)
-                    .onPositive { _: MaterialDialog?, _: DialogAction? ->
-                        try {
-                            Log.d(TAG, "deleteAll, currentType:$currentType, currentFilter:$currentFilter")
-                            viewModel.setType(currentType).setFilter(currentFilter).deleteAll()
-                            reloadData()
-                            XToastUtils.success(if (currentFilter.isEmpty()) R.string.delete_type_log_toast else R.string.delete_filter_log_toast)
-                        } catch (e: Exception) {
-                            e.message?.let { XToastUtils.error(it) }
-                        }
-                    }
-                    .show()
-            }
-        })
-        titleBar!!.addAction(object : TitleBar.ImageAction(R.drawable.ic_filter) {
-            @SingleClick
-            override fun performAction(view: View) {
-                initLogsFilterDialog()
-                logsFilterPopup?.show()
-            }
-        })
-        return titleBar
-    }
+    override fun initTitle(): TitleBar? = null
 
     private fun getContainer(): MainActivity? {
         return activity as MainActivity?
@@ -119,14 +85,17 @@ class LogsFragment : BaseFragment<FragmentLogsBinding?>(), MsgPagingAdapter.OnIt
         binding!!.recyclerView.setRecycledViewPool(viewPool)
         viewPool.setMaxRecycledViews(0, 10)
         binding!!.recyclerView.isFocusableInTouchMode = false
-
-        // 仅短信：隐藏来电/应用分类切换
-        binding!!.tabBar.visibility = View.GONE
         currentType = "sms"
     }
 
     override fun initListeners() {
         binding!!.recyclerView.adapter = adapter
+        binding!!.btnSettings.setOnClickListener { getContainer()?.openSettings() }
+        binding!!.btnFilter.setOnClickListener {
+            initLogsFilterDialog()
+            logsFilterPopup?.show()
+        }
+        binding!!.btnClear.setOnClickListener { confirmClearLogs() }
 
         //下拉刷新
         binding!!.refreshLayout.setOnRefreshListener { refreshLayout: RefreshLayout ->
@@ -138,6 +107,25 @@ class LogsFragment : BaseFragment<FragmentLogsBinding?>(), MsgPagingAdapter.OnIt
         }
 
         binding!!.refreshLayout.autoRefresh()
+    }
+
+    @SingleClick
+    private fun confirmClearLogs() {
+        MaterialDialog.Builder(requireContext())
+            .content(if (currentFilter.isEmpty()) R.string.delete_type_log_tips else R.string.delete_filter_log_tips)
+            .positiveText(R.string.lab_yes)
+            .negativeText(R.string.lab_no)
+            .onPositive { _: MaterialDialog?, _: DialogAction? ->
+                try {
+                    Log.d(TAG, "deleteAll, currentType:$currentType, currentFilter:$currentFilter")
+                    viewModel.setType(currentType).setFilter(currentFilter).deleteAll()
+                    reloadData()
+                    XToastUtils.success(if (currentFilter.isEmpty()) R.string.delete_type_log_toast else R.string.delete_filter_log_toast)
+                } catch (e: Exception) {
+                    e.message?.let { XToastUtils.error(it) }
+                }
+            }
+            .show()
     }
 
     override fun onItemClicked(view: View?, item: MsgAndLogs) {

@@ -26,17 +26,7 @@ class CourtSettingsFragment : BaseFragment<FragmentCourtSettingsBinding?>() {
         return FragmentCourtSettingsBinding.inflate(inflater, container, false)
     }
 
-    override fun initTitle(): TitleBar? {
-        return try {
-            super.initTitle()!!.setImmersive(false).apply {
-                setTitle(R.string.menu_settings)
-                setLeftClickListener { popToBack() }
-            }
-        } catch (e: Exception) {
-            Log.e("CourtSettings", "initTitle: ${e.message}")
-            null
-        }
-    }
+    override fun initTitle(): TitleBar? = null
 
     override fun initViews() {
         try {
@@ -54,6 +44,7 @@ class CourtSettingsFragment : BaseFragment<FragmentCourtSettingsBinding?>() {
 
     override fun initListeners() {
         try {
+            binding!!.btnBack.setOnClickListener { popToBack() }
             binding!!.sbEnableSms.setOnCheckedChangeListener { _, checked ->
                 SettingUtils.enableSms = checked
             }

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/xui_config_color_white"
+    android:background="@drawable/bg_court_paper"
     android:orientation="vertical"
     tools:ignore="Overdraw">
 
@@ -12,24 +12,23 @@
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
-
-    </FrameLayout>
-
-    <View style="@style/SeparatorStyle.Vertical" />
+        android:layout_weight="1" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabs"
-        style="@style/TabLayoutStyle"
+        style="@style/CourtTabLayout"
         android:layout_width="match_parent"
-        android:layout_height="?attr/xui_actionbar_height"
+        android:layout_height="@dimen/court_nav_height"
+        android:background="@drawable/bg_court_nav"
         android:contentDescription="@string/description_navigation_main"
-        app:tabBackground="@null"
+        android:elevation="0dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
         app:tabGravity="fill"
-        app:tabIndicatorColor="@color/xui_config_color_transparent"
-        app:tabMinWidth="300dp"
+        app:tabIconTint="@color/court_seal"
+        app:tabIndicator="@null"
+        app:tabInlineLabel="true"
         app:tabMode="fixed"
-        app:tabPaddingTop="2dp"
-        app:tabTextAppearance="@style/TabText.Explain" />
+        app:tabRippleColor="@android:color/transparent" />
 
 </LinearLayout>
