@@ -94,8 +94,8 @@
     <string name="menu_rules">规则</string>
     <string name="menu_settings">设置</string>
     <string name="court_brand">法院短信转发器</string>
-    <string name="court_logs_subtitle">法院短信的转发记录</string>
-    <string name="court_rules_subtitle">自动匹配 12368 等法院短信</string>
+    <string name="court_logs_subtitle">查看已转发的法院短信</string>
+    <string name="court_rules_subtitle">匹配 12368 等法院短信并转发</string>
     <string name="court_action_back">返回</string>
     <string name="court_action_filter">筛选</string>
     <string name="court_action_clear">清空</string>
@@ -103,7 +103,7 @@
     <string name="court_action_edit">编辑</string>
     <string name="court_action_more">管理</string>
     <string name="court_settings_title">设置</string>
-    <string name="court_settings_intro">填写邮箱后即可自动转发法院短信</string>
+    <string name="court_settings_intro">填写邮箱与授权码后，法院短信会自动转发</string>
     <string name="court_field_email">邮箱</string>
     <string name="court_field_auth">授权码</string>
     <string name="court_save">保存</string>

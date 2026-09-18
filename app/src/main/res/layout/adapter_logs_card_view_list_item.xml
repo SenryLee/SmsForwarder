@@ -32,7 +32,9 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:textAppearance="@style/CourtText.Body"
+                android:textColor="@color/court_ink"
                 android:textSize="16sp"
+                android:textStyle="bold"
                 tools:text="12368" />
 
             <TextView
@@ -48,7 +50,7 @@
                 android:layout_width="14dp"
                 android:layout_height="14dp"
                 android:layout_marginStart="8dp"
-                android:alpha="0.72"
+                android:alpha="0.7"
                 tools:ignore="ContentDescription" />
         </LinearLayout>
 

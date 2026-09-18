@@ -12,7 +12,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowBackground">@drawable/bg_court_paper</item>
+        <item name="android:windowBackground">@color/court_paper</item>
         <item name="xui_config_color_background">@color/court_paper</item>
         <item name="android:statusBarColor">@color/court_paper</item>
         <item name="android:navigationBarColor">@color/court_surface</item>

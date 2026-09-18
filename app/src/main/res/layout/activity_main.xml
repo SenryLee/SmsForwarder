@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_court_paper"
+    android:background="@color/court_paper"
     android:orientation="vertical"
     tools:ignore="Overdraw">
 
@@ -22,11 +22,12 @@
         android:background="@drawable/bg_court_nav"
         android:contentDescription="@string/description_navigation_main"
         android:elevation="0dp"
-        android:paddingTop="4dp"
-        android:paddingBottom="4dp"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
         app:tabGravity="fill"
-        app:tabIconTint="@color/court_seal"
-        app:tabIndicator="@null"
+        app:tabIconTint="@color/court_primary"
+        app:tabIndicatorHeight="2dp"
+        app:tabIndicatorColor="@color/court_primary"
         app:tabInlineLabel="true"
         app:tabMode="fixed"
         app:tabRippleColor="@android:color/transparent" />

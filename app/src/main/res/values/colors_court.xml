@@ -1,15 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="court_ink">#2A2321</color>
-    <color name="court_ink_secondary">#6F635E</color>
-    <color name="court_ink_hint">#9A8D87</color>
-    <color name="court_paper">#F5F0EB</color>
-    <color name="court_surface">#FFFBF8</color>
-    <color name="court_line">#E7DDD5</color>
-    <color name="court_seal">#A85A52</color>
-    <color name="court_seal_soft">#F3E4E1</color>
-    <color name="court_ok">#4F6B52</color>
-    <color name="court_ok_soft">#E4EDE5</color>
-    <color name="court_warn">#9A6B2F</color>
-    <color name="court_danger">#A14B45</color>
+    <!-- 法天使色卡 -->
+    <color name="court_primary">#3CB1E6</color>
+    <color name="court_primary_dark">#2A8FBC</color>
+    <color name="court_brand_end">#7D49E6</color>
+
+    <color name="court_ink">#121217</color>
+    <color name="court_ink_secondary">#30303F</color>
+    <color name="court_ink_tertiary">#6E6F84</color>
+    <color name="court_ink_hint">#9D9DB0</color>
+
+    <color name="court_border">#D0D0DB</color>
+    <color name="court_border_50">#80D0D0DB</color>
+    <color name="court_divider">#40D0D0DB</color>
+    <color name="court_field_bg">#D0D0DB</color>
+    <color name="court_category">#E9E9F0</color>
+    <color name="court_paper">#F6F7FA</color>
+    <color name="court_surface">#FFFFFF</color>
+    <color name="court_line">#80D0D0DB</color>
+
+    <!-- 兼容旧引用名 -->
+    <color name="court_seal">#3CB1E6</color>
+    <color name="court_seal_soft">#E8F6FC</color>
+
+    <color name="court_ok">#01BD8B</color>
+    <color name="court_ok_soft">#E6F9F3</color>
+    <color name="court_warn">#FAAD3A</color>
+    <color name="court_danger">#FF5555</color>
 </resources>

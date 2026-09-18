@@ -10,20 +10,21 @@
         <item name="android:fontFamily">@font/font_court_display</item>
         <item name="android:textSize">@dimen/court_title_size</item>
         <item name="android:textColor">@color/court_ink</item>
-        <item name="android:letterSpacing">0.02</item>
+        <item name="android:letterSpacing">0.01</item>
     </style>
 
     <style name="CourtText.Brand">
-        <item name="android:fontFamily">@font/font_court_display</item>
-        <item name="android:textSize">15sp</item>
-        <item name="android:textColor">@color/court_seal</item>
-        <item name="android:letterSpacing">0.08</item>
+        <item name="android:fontFamily">@font/font_court_body</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/court_primary</item>
+        <item name="android:letterSpacing">0.06</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="CourtText.Body">
         <item name="android:textSize">@dimen/court_body_size</item>
         <item name="android:textColor">@color/court_ink</item>
-        <item name="android:lineSpacingExtra">4dp</item>
+        <item name="android:lineSpacingExtra">3dp</item>
     </style>
 
     <style name="CourtText.Meta">
@@ -33,15 +34,16 @@
     </style>
 
     <style name="CourtText.Label">
-        <item name="android:textSize">12sp</item>
-        <item name="android:textColor">@color/court_ink_secondary</item>
-        <item name="android:letterSpacing">0.04</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/court_ink_tertiary</item>
+        <item name="android:letterSpacing">0.02</item>
     </style>
 
     <style name="CourtText.Action">
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/court_seal</item>
+        <item name="android:textColor">@color/court_primary</item>
         <item name="android:fontFamily">@font/font_court_body</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="CourtButton" parent="Widget.AppCompat.Button.Borderless">
@@ -57,7 +59,7 @@
 
     <style name="CourtButton.Ghost">
         <item name="android:background">@drawable/bg_court_button_ghost</item>
-        <item name="android:textColor">@color/court_seal</item>
+        <item name="android:textColor">@color/court_primary</item>
     </style>
 
     <style name="CourtTabText" parent="TextAppearance.Design.Tab">
@@ -69,9 +71,9 @@
 
     <style name="CourtTabLayout" parent="Widget.Design.TabLayout">
         <item name="tabIndicatorHeight">2dp</item>
-        <item name="tabIndicatorColor">@color/court_seal</item>
+        <item name="tabIndicatorColor">@color/court_primary</item>
         <item name="tabIndicatorFullWidth">false</item>
-        <item name="tabSelectedTextColor">@color/court_seal</item>
+        <item name="tabSelectedTextColor">@color/court_primary</item>
         <item name="tabTextColor">@color/court_ink_hint</item>
         <item name="tabRippleColor">@android:color/transparent</item>
         <item name="tabTextAppearance">@style/CourtTabText</item>
