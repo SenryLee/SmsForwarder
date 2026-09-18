@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <color name="colorPrimary">#299EE3</color>
-    <color name="colorPrimaryDark">#299EE3</color>
-    <color name="colorAccent">#299EE3</color>
+    <!-- 法天使色卡 -->
+    <color name="colorPrimary">#3CB1E6</color>
+    <color name="colorPrimaryDark">#2A8FBC</color>
+    <color name="colorAccent">#3CB1E6</color>
+    <color name="court_bg">#F6F7FA</color>
+    <color name="court_text">#121217</color>
 
     <color name="config_color_select_bg">#FFF1F1F1</color>
 
     <color name="toast_default_text_color" tools:ignore="PrivateResource">@color/xui_config_color_white</color>
-    <color name="toast_error_color" tools:ignore="PrivateResource">@color/xui_config_color_red</color>
+    <color name="toast_error_color" tools:ignore="PrivateResource">#FF5555</color>
     <color name="toast_info_color" tools:ignore="PrivateResource">@color/colorAccent</color>
-    <color name="toast_success_color" tools:ignore="PrivateResource">#388E3C</color>
-    <color name="toast_warning_color" tools:ignore="PrivateResource">@color/xui_config_color_waring</color>
+    <color name="toast_success_color" tools:ignore="PrivateResource">#01BD8B</color>
+    <color name="toast_warning_color" tools:ignore="PrivateResource">#FAAD3A</color>
     <color name="toast_normal_tint_color" tools:ignore="PrivateResource">#353A3E</color>
 
     <color name="colorBlueGrey">#78909C</color>

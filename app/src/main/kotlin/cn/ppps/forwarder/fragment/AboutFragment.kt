@@ -46,21 +46,6 @@ class AboutFragment : BaseFragment<FragmentAboutBinding?>(), SuperTextView.OnSup
     override fun initTitle(): TitleBar? {
         val titleBar = super.initTitle()!!.setImmersive(false)
         titleBar.setTitle(R.string.menu_about)
-        titleBar.addAction(object : TitleBar.ImageAction(R.drawable.ic_menu_rule) {
-            @SingleClick
-            override fun performAction(view: View) {
-                MaterialDialog.Builder(requireContext())
-                    .title(R.string.court_mode_title)
-                    .content(R.string.court_mode_content)
-                    .positiveText(R.string.court_guide_apply)
-                    .negativeText(R.string.lab_no)
-                    .onPositive { _: MaterialDialog?, _: DialogAction? ->
-                        (activity as? cn.ppps.forwarder.activity.MainActivity)?.applyCourtRules(force = true)
-                            ?: cn.ppps.forwarder.utils.court.CourtModeBootstrap.seedCourtRulesAsync(true)
-                    }
-                    .show()
-            }
-        })
         return titleBar
     }
 

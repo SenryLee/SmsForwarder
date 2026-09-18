@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.xuexiang.xui.widget.layout.XUIFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_view"
-    style="@style/XUILayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/config_margin_5dp"
-    android:layout_marginTop="@dimen/config_margin_5dp"
-    android:layout_marginEnd="@dimen/config_margin_5dp"
-    android:padding="@dimen/config_padding_10dp">
+    android:layout_marginBottom="10dp"
+    android:background="@drawable/bg_court_card"
+    android:paddingStart="16dp"
+    android:paddingTop="14dp"
+    android:paddingEnd="10dp"
+    android:paddingBottom="14dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,34 +18,37 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+        <FrameLayout
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_court_pill_seal">
 
             <ImageView
                 android:id="@+id/iv_rule_image"
-                android:layout_width="@dimen/card_view_icon_size"
-                android:layout_height="@dimen/card_view_icon_size"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_app"
+                app:tint="@color/court_primary"
                 tools:ignore="ContentDescription,ImageContrastCheck" />
 
             <ImageView
                 android:id="@+id/iv_rule_status"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="-16dp"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_gravity="bottom|end"
+                android:layout_marginEnd="2dp"
+                android:layout_marginBottom="2dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_stop"
                 tools:ignore="ContentDescription" />
-
-        </LinearLayout>
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
             android:layout_weight="1"
             android:orientation="vertical">
 
@@ -52,53 +56,61 @@
                 android:id="@+id/tv_rule_match"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="5dp"
                 android:ellipsize="end"
-                android:gravity="start"
-                android:maxEms="8"
-                android:maxLines="3"
-                android:textSize="@dimen/text_size_small" />
+                android:maxLines="2"
+                android:textAppearance="@style/CourtText.Body"
+                android:textColor="@color/court_ink"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                tools:text="法院号码·12368" />
 
             <LinearLayout
                 android:id="@+id/layout_Senders"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
+                android:layout_marginTop="6dp"
                 android:orientation="horizontal" />
-
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/iv_copy"
-            android:layout_width="@dimen/card_view_image_size"
-            android:layout_height="@dimen/card_view_image_size"
-            android:padding="@dimen/card_view_image_padding"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_copy"
-            app:tint="@color/colorStart"
-            tools:ignore="ContentDescription,ImageContrastCheck" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/iv_edit"
-            android:layout_width="@dimen/card_view_image_size"
-            android:layout_height="@dimen/card_view_image_size"
-            android:padding="@dimen/card_view_image_padding"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_edit"
-            app:tint="@color/toast_info_color"
-            tools:ignore="ContentDescription,PrivateResource,ImageContrastCheck" />
+            <ImageView
+                android:id="@+id/iv_edit"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:background="@drawable/bg_court_header_action"
+                android:padding="7dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_edit"
+                app:tint="@color/court_primary"
+                tools:ignore="ContentDescription,PrivateResource,ImageContrastCheck" />
 
-        <ImageView
-            android:id="@+id/iv_delete"
-            android:layout_width="@dimen/card_view_image_size"
-            android:layout_height="@dimen/card_view_image_size"
-            android:padding="@dimen/card_view_image_padding"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_delete"
-            app:tint="@color/toast_error_color"
-            tools:ignore="ContentDescription,PrivateResource" />
+            <ImageView
+                android:id="@+id/iv_copy"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:background="@drawable/bg_court_header_action"
+                android:padding="7dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_copy"
+                app:tint="@color/court_ink_tertiary"
+                tools:ignore="ContentDescription,ImageContrastCheck" />
 
+            <ImageView
+                android:id="@+id/iv_delete"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:background="@drawable/bg_court_header_action"
+                android:padding="7dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_delete"
+                app:tint="@color/court_danger"
+                tools:ignore="ContentDescription,PrivateResource" />
+        </LinearLayout>
     </LinearLayout>
 
-</com.xuexiang.xui.widget.layout.XUIFrameLayout>
+</FrameLayout>
